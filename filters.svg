@@ -1,8 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
   <style>
-    .title { font: 500 22px 'Segoe UI', Ubuntu, sans-serif; fill: #f2f2f2; }
-    .sub { font: 400 12px 'Segoe UI', Ubuntu, sans-serif; fill: #999a9e; }
-    .body { font: 400 14px 'Segoe UI', Ubuntu, sans-serif; fill: #c8c8c8; }
+    .title { font: 500 22px 'Segoe UI', Ubuntu, sans-serif; fill: #1c1d20; }
+    .sub { font: 400 12px 'Segoe UI', Ubuntu, sans-serif; fill: #6e6e6e; }
+    .body { font: 400 14px 'Segoe UI', Ubuntu, sans-serif; fill: #3a3a3a; }
+    @media (prefers-color-scheme: dark) {
+      .title { fill: #f2f2f2; }
+      .sub { fill: #999a9e; }
+      .body { fill: #c8c8c8; }
+    }
   </style>
 
   <!-- col 1 / row 1 -->
