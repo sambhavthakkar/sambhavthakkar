@@ -4,11 +4,7 @@
 -->
 
 <p>
-  <img src="header.png" alt="Sambhav Thakkar — Freelance Designer & Developer. Located in Delhi, India." width="100%" />
-</p>
-
-<p>
-  <img src="hellos.png" alt="Hello · Bonjour · स्वागत हे · Ciao · Olá · おい · Hallå · Guten tag · Hallo" width="100%" />
+  <img src="header.gif" alt="Sambhav Thakkar — Freelance Designer & Developer. Located in Delhi, India." width="100%" />
 </p>
 
 © Code by Sambhav
@@ -66,32 +62,9 @@ Most of that lives in private repos and client work. The public graph is not the
 
 The dock is a filter. One profile. Four lenses.
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>Rust</h3>
-      <p><sub>systems &amp; tooling</sub></p>
-      <p>Software that stays fast, safe, and close to the metal. Ownership at compile time, tooling teams can trust in production.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3>Design</h3>
-      <p><sub>consultation</sub></p>
-      <p>Product thinking, interfaces, and systems that survive contact with engineering. Not a Figma file as the deliverable — the decision is.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>Go</h3>
-      <p><sub>backend &amp; services</sub></p>
-      <p>Simple services. Explicit errors. Easy to run. Readable handlers and APIs other humans enjoy reviewing.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3>Mobile</h3>
-      <p><sub>cross-platform</sub></p>
-      <p>One codebase, every screen. Flutter in production; Kotlin Multiplatform and Compose Multiplatform as the same mobile practice grows.</p>
-    </td>
-  </tr>
-</table>
+<p>
+  <img src="filters.svg" alt="Rust · Design · Go · Mobile" width="100%" />
+</p>
 
 ---
 
