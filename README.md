@@ -62,32 +62,9 @@ Most of that lives in private repos and client work. The public graph is not the
 
 The dock is a filter. One profile. Four lenses.
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>Rust</h3>
-      <p><sub>systems &amp; tooling</sub></p>
-      <p>Software that stays fast, safe, and close to the metal. Ownership at compile time, tooling teams can trust in production.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3>Design</h3>
-      <p><sub>consultation</sub></p>
-      <p>Product thinking, interfaces, and systems that survive contact with engineering. Not a Figma file as the deliverable — the decision is.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>Go</h3>
-      <p><sub>backend &amp; services</sub></p>
-      <p>Simple services. Explicit errors. Easy to run. Readable handlers and APIs other humans enjoy reviewing.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3>Mobile</h3>
-      <p><sub>cross-platform</sub></p>
-      <p>One codebase, every screen. Flutter in production; Kotlin Multiplatform and Compose Multiplatform as the same mobile practice grows.</p>
-    </td>
-  </tr>
-</table>
+<p>
+  <img src="filters.svg" alt="Rust, Design, Go, Mobile — one practice, four lenses." width="100%" />
+</p>
 
 ---
 

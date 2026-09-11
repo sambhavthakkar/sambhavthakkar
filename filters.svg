@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
+  <style>
+    .title { font: 500 22px 'Segoe UI', Ubuntu, sans-serif; fill: #f2f2f2; }
+    .sub { font: 400 12px 'Segoe UI', Ubuntu, sans-serif; fill: #999a9e; }
+    .body { font: 400 14px 'Segoe UI', Ubuntu, sans-serif; fill: #c8c8c8; }
+  </style>
+
+  <!-- col 1 / row 1 -->
+  <text class="title" x="0" y="24">Rust</text>
+  <text class="sub" x="0" y="46">systems &amp; tooling</text>
+  <text class="body" x="0" y="76">Software that stays fast, safe, and close</text>
+  <text class="body" x="0" y="96">to the metal. Ownership at compile time,</text>
+  <text class="body" x="0" y="116">tooling teams can trust in production.</text>
+
+  <!-- col 2 / row 1 -->
+  <text class="title" x="468" y="24">Design</text>
+  <text class="sub" x="468" y="46">consultation</text>
+  <text class="body" x="468" y="76">Product thinking, interfaces, and systems</text>
+  <text class="body" x="468" y="96">that survive contact with engineering.</text>
+  <text class="body" x="468" y="116">The decision is the deliverable.</text>
+
+  <!-- col 1 / row 2 -->
+  <text class="title" x="0" y="176">Go</text>
+  <text class="sub" x="0" y="198">backend &amp; services</text>
+  <text class="body" x="0" y="228">Simple services. Explicit errors.</text>
+  <text class="body" x="0" y="248">Easy to run. Readable handlers other</text>
+  <text class="body" x="0" y="268">humans enjoy reviewing.</text>
+
+  <!-- col 2 / row 2 -->
+  <text class="title" x="468" y="176">Mobile</text>
+  <text class="sub" x="468" y="198">cross-platform</text>
+  <text class="body" x="468" y="228">One codebase, every screen. Flutter now;</text>
+  <text class="body" x="468" y="248">KMP and Compose Multiplatform as the</text>
+  <text class="body" x="468" y="268">same practice grows.</text>
+</svg>
