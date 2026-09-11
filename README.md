@@ -49,10 +49,16 @@ export const sambhav = {
   <img src="stats.png" alt="1,640 contributions · 44 public commits in 2026 · 35-day longest streak · A+ rank" width="100%" />
 </p>
 
-<p>
-  <img src="github-stats.svg" alt="GitHub stats" height="170" />
-  <img src="streak.svg" alt="GitHub streak" height="170" />
-</p>
+<table>
+  <tr>
+    <td width="50%">
+      <img src="github-stats.svg" alt="GitHub stats" width="100%" />
+    </td>
+    <td width="50%">
+      <img src="streak.svg" alt="GitHub streak" width="100%" />
+    </td>
+  </tr>
+</table>
 
 <p>
   <img src="contrib.svg" alt="Contribution log" width="100%" />
@@ -93,70 +99,6 @@ The dock is a filter. One profile. Four lenses.
       <h3>Mobile</h3>
       <p><sub>cross-platform</sub></p>
       <p>One codebase, every screen. Flutter in production; Kotlin Multiplatform and Compose Multiplatform as the same mobile practice grows.</p>
-    </td>
-  </tr>
-</table>
-
----
-
-<sub>CURRENTLY IN MOTION</sub>
-
-<table>
-  <tr>
-    <td width="33%" valign="top">
-      <h3>product surfaces</h3>
-      <p>Cross-platform apps and web with a real design system — KMP / Compose Multiplatform, Flutter when it fits, React / Next.js, the last 10% that makes it feel finished.</p>
-    </td>
-    <td width="33%" valign="top">
-      <h3>full-stack slices</h3>
-      <p>Client to service. Go backends, API contracts, and the glue that keeps mobile and web telling the same story. Full Stack intern @ FabroLabs.</p>
-    </td>
-    <td width="33%" valign="top">
-      <h3>systems that stay up</h3>
-      <p>Local-first setups, self-hosted automation, backends that survive a bad network and a worse meeting.</p>
-    </td>
-  </tr>
-</table>
-
----
-
-<sub>RECENT WORK</sub>
-
-<table>
-  <tr>
-    <td>
-      <h3><a href="https://github.com/sambhavthakkar">Portfolio Website</a></h3>
-    </td>
-    <td align="right">
-      Design &amp; Development<br />
-      <sub>2026</sub>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h3><a href="https://github.com/sambhavthakkar/SuperShop">SuperShop</a></h3>
-    </td>
-    <td align="right">
-      Flutter · product<br />
-      <sub>public</sub>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h3><a href="https://github.com/sambhavthakkar/QuantaraX">QuantaraX</a></h3>
-    </td>
-    <td align="right">
-      Go · systems<br />
-      <sub>public</sub>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h3><a href="https://github.com/sambhavthakkar/PulseDrive">PulseDrive</a></h3>
-    </td>
-    <td align="right">
-      Python · tooling<br />
-      <sub>public</sub>
     </td>
   </tr>
 </table>
