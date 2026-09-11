@@ -7,18 +7,18 @@
 </style>
 <rect x="12" y="14" width="210" height="140" rx="16" fill="none" stroke="#2e2f32"/>
 <text class="label" x="30" y="46">CONTRIBUTIONS</text>
-<text class="value" x="30" y="102" fill="#455ce9">1,640</text>
+<text class="value" x="30" y="102" fill="#f2f2f2">1,640</text>
 <text class="hint" x="30" y="128">private graph included</text>
 <rect x="234" y="14" width="210" height="140" rx="16" fill="none" stroke="#2e2f32"/>
 <text class="label" x="252" y="46">COMMITS · 2026</text>
-<text class="value" x="252" y="102" fill="#ffffff">50</text>
+<text class="value" x="252" y="102" fill="#f2f2f2">51</text>
 <text class="hint" x="252" y="128">public surface</text>
 <rect x="456" y="14" width="210" height="140" rx="16" fill="none" stroke="#2e2f32"/>
 <text class="label" x="474" y="46">LONGEST STREAK</text>
-<text class="value" x="474" y="102" fill="#ffffff">35</text>
+<text class="value" x="474" y="102" fill="#f2f2f2">35</text>
 <text class="hint" x="474" y="128">days in a row</text>
 <rect x="678" y="14" width="210" height="140" rx="16" fill="none" stroke="#2e2f32"/>
 <text class="label" x="696" y="46">GITHUB RANK</text>
-<text class="value" x="696" y="102" fill="#ffffff">A+</text>
+<text class="value" x="696" y="102" fill="#f2f2f2">A+</text>
 <text class="hint" x="696" y="128">live card</text>
 </svg>

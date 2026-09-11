@@ -9,11 +9,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 USER = "sambhavthakkar"
-# cinematic studio tokens
+# ink / paper — no hue
 BG = "1C1D20"
-ACCENT = "455CE9"
+ACCENT = "F2F2F2"
 MUTED = "999A9E"
-INK = "FFFFFF"
+INK = "F2F2F2"
 LINE = "2E2F32"
 
 STATS_URL = (
@@ -105,7 +105,7 @@ def strip_svg(commits: str, contributions: str, longest: str, rank: str) -> str:
     gap, w, h, x0, y0 = 12, 210, 140, 12, 14
     for i, (label, value, hint, accent) in enumerate(cells):
         x = x0 + i * (w + gap)
-        fill = "#455ce9" if accent else "#ffffff"
+        fill = f"#{ACCENT.lower()}" if accent else f"#{INK.lower()}"
         parts += [
             f'<rect x="{x}" y="{y0}" width="{w}" height="{h}" rx="16" fill="none" stroke="#{LINE.lower()}"/>',
             f'<text class="label" x="{x + 18}" y="{y0 + 32}">{label.upper()}</text>',
@@ -170,8 +170,19 @@ def main() -> None:
 
     s = parse_stats(stats_raw)
     k = parse_streak(streak_raw)
-    stats = freeze(stats_raw).replace("#C8C9CC", f"#{MUTED}").replace("#c8c9cc", f"#{MUTED.lower()}")
-    streak = freeze(streak_raw).replace("#C8C9CC", f"#{MUTED}").replace("#c8c9cc", f"#{MUTED.lower()}")
+    def theme(svg: str) -> str:
+        svg = freeze(svg)
+        for old, new in (
+            ("#C8C9CC", f"#{MUTED}"),
+            ("#c8c9cc", f"#{MUTED.lower()}"),
+            ("#455CE9", f"#{ACCENT}"),
+            ("#455ce9", f"#{ACCENT.lower()}"),
+        ):
+            svg = svg.replace(old, new)
+        return svg
+
+    stats = theme(stats_raw)
+    streak = theme(streak_raw)
 
     (ROOT / "github-stats.svg").write_text(stats)
     (ROOT / "streak.svg").write_text(streak)

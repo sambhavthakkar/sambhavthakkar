@@ -9,11 +9,11 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Sambhav Thakkar's GitHub Stats, Rank: A+</title>
-        <desc id="descId">Total Commits (2026): 50, Total PRs: 3, Total Issues: 0, Contributed to (last year): 3</desc>
+        <desc id="descId">Total Commits (2026): 51, Total PRs: 3, Total Issues: 0, Contributed to (last year): 3</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
-            fill: #FFFFFF;
+            fill: #F2F2F2;
             animation: fadeInAnimation 0.8s ease-in-out forwards;
           }
           @supports(-moz-appearance: auto) {
@@ -40,18 +40,18 @@
     .not_bold { font-weight: 400 }
     .bold { font-weight: 700 }
     .icon {
-      fill: #455CE9;
+      fill: #F2F2F2;
       display: block;
     }
 
     .rank-circle-rim {
-      stroke: #455CE9;
+      stroke: #F2F2F2;
       fill: none;
       stroke-width: 6;
       opacity: 0.2;
     }
     .rank-circle {
-      stroke: #455CE9;
+      stroke: #F2F2F2;
       stroke-dasharray: 250;
       fill: none;
       stroke-width: 6;
@@ -67,7 +67,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 127.54997799229346;
+        stroke-dashoffset: 127.5428174319374;
       }
     }
   
@@ -160,7 +160,7 @@
         x="219.01"
         y="12.5"
         data-testid="commits"
-      >50</text>
+      >51</text>
     </g>
   </g><g transform="translate(0, 25)">
     <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">

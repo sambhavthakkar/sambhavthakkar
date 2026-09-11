@@ -1,6 +1,6 @@
 <!--
   GitHub profile README for sambhavthakkar/sambhavthakkar
-  Palette: #1C1D20 charcoal · #999D9E hero · #455CE9 accent · #999A9E muted
+  Palette: #141414 black · #F2F2F2 paper · #999A9E muted · #2E2F32 line
 -->
 
 <p>
@@ -96,11 +96,11 @@ The dock is a filter. One profile. Four lenses.
 ```mermaid
 %%{init: {'theme':'base','themeVariables': {
   'primaryColor': '#1c1d20',
-  'primaryTextColor': '#ffffff',
-  'primaryBorderColor': '#455ce9',
+  'primaryTextColor': '#f2f2f2',
+  'primaryBorderColor': '#999a9e',
   'lineColor': '#999a9e',
   'secondaryColor': '#2e2f32',
-  'tertiaryColor': '#1c1d20'
+  'tertiaryColor': '#141414'
 }}}%%
 flowchart LR
   A[Problem with teeth] --> B[Smallest honest architecture]
@@ -117,17 +117,11 @@ Interface and system, same hand. The slice that survives a real user is the one 
 
 <sub>TOOLKIT</sub>
 
-**languages & runtimes**
+languages & runtimes · Kotlin · Dart · Go · TypeScript · JavaScript · Python
 
-<img src="https://skillicons.dev/icons?i=kotlin,dart,go,ts,js,python" alt="Kotlin, Dart, Go, TypeScript, JavaScript, Python" />
+product surface · Flutter · React / Next.js · Firebase · Figma
 
-**product surface**
-
-<img src="https://skillicons.dev/icons?i=flutter,react,firebase,figma" alt="Flutter, React, Firebase, Figma" />
-
-**ops & systems**
-
-<img src="https://skillicons.dev/icons?i=linux,docker,git,github,cloudflare" alt="Linux, Docker, Git, GitHub, Cloudflare" />
+ops & systems · Linux · Docker · Git · GitHub · Cloudflare
 
 <sub>KMP · Compose Multiplatform · Flutter · React / Next.js · Go · UI/UX · Rust exploring</sub>
 
