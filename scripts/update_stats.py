@@ -9,20 +9,24 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 USER = "sambhavthakkar"
-ACCENT = "455CE9"
+# cinematic studio tokens
 BG = "1C1D20"
+ACCENT = "455CE9"
+MUTED = "999A9E"
+INK = "FFFFFF"
+LINE = "2E2F32"
 
 STATS_URL = (
     f"https://github-readme-stats.zohan.tech/api?username={USER}"
     "&show_icons=true&hide_border=true"
-    f"&bg_color={BG}&title_color=FFFFFF&icon_color={ACCENT}"
-    "&text_color=C8C9CC&ring_color=455CE9&hide=stars"
+    f"&bg_color={BG}&title_color={INK}&icon_color={ACCENT}"
+    f"&text_color={MUTED}&ring_color={ACCENT}&hide=stars"
 )
 STREAK_URL = (
     f"https://streak-stats.demolab.com/?user={USER}"
     f"&background={BG}&border={BG}&ring={ACCENT}&fire={ACCENT}"
-    "&currStreakLabel=FFFFFF&sideLabels=999A9E&currStreakNum=FFFFFF"
-    "&sideNums=C8C9CC&dates=999A9E&stroke=2E2F32"
+    f"&currStreakLabel={INK}&sideLabels={MUTED}&currStreakNum={INK}"
+    f"&sideNums={MUTED}&dates={MUTED}&stroke={LINE}"
 )
 CHART_URL = f"https://ghchart.rshah.org/{ACCENT.lower()}/{USER}"
 
@@ -91,11 +95,11 @@ def strip_svg(commits: str, contributions: str, longest: str, rank: str) -> str:
     ]
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 900 168" preserveAspectRatio="xMidYMid meet">',
-        '<rect width="900" height="168" fill="#1c1d20"/>',
+        f'<rect width="900" height="168" fill="#{BG.lower()}"/>',
         "<style>",
-        "  .label { font: 500 11px 'Segoe UI', Ubuntu, sans-serif; fill: #999a9e; letter-spacing: 1.4px; }",
+        f"  .label {{ font: 500 11px 'Segoe UI', Ubuntu, sans-serif; fill: #{MUTED.lower()}; letter-spacing: 1.4px; }}",
         "  .value { font: 400 36px 'Segoe UI', Ubuntu, sans-serif; }",
-        "  .hint { font: 400 11px 'Segoe UI', Ubuntu, sans-serif; fill: #999a9e; }",
+        f"  .hint {{ font: 400 11px 'Segoe UI', Ubuntu, sans-serif; fill: #{MUTED.lower()}; }}",
         "</style>",
     ]
     gap, w, h, x0, y0 = 12, 210, 140, 12, 14
@@ -103,7 +107,7 @@ def strip_svg(commits: str, contributions: str, longest: str, rank: str) -> str:
         x = x0 + i * (w + gap)
         fill = "#455ce9" if accent else "#ffffff"
         parts += [
-            f'<rect x="{x}" y="{y0}" width="{w}" height="{h}" rx="16" fill="none" stroke="#2e2f32"/>',
+            f'<rect x="{x}" y="{y0}" width="{w}" height="{h}" rx="16" fill="none" stroke="#{LINE.lower()}"/>',
             f'<text class="label" x="{x + 18}" y="{y0 + 32}">{label.upper()}</text>',
             f'<text class="value" x="{x + 18}" y="{y0 + 88}" fill="{fill}">{value}</text>',
             f'<text class="hint" x="{x + 18}" y="{y0 + 114}">{hint}</text>',
@@ -112,14 +116,46 @@ def strip_svg(commits: str, contributions: str, longest: str, rank: str) -> str:
     return "\n".join(parts)
 
 
+def _hex_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def _rgb_hex(rgb: tuple[int, int, int]) -> str:
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+def _mix(bg: str, accent: str, t: float) -> str:
+    a, b = _hex_rgb(bg), _hex_rgb(accent)
+    return _rgb_hex(tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3)))  # type: ignore[return-value]
+
+
 def wrap_chart(raw: str) -> str:
-    raw = raw.replace("fill:#EEEEEE", "fill:#2e2f32")
-    raw = raw.replace("fill:#767676", "fill:#999a9e")
+    # Site contribution log: mix(background, brand) at 0.1 / 0.28 / 0.5 / 0.74 / brand
+    levels = [
+        _mix(f"#{BG}", f"#{ACCENT}", 0.10),
+        _mix(f"#{BG}", f"#{ACCENT}", 0.28),
+        _mix(f"#{BG}", f"#{ACCENT}", 0.50),
+        _mix(f"#{BG}", f"#{ACCENT}", 0.74),
+        f"#{ACCENT.lower()}",
+    ]
+    for score in range(5):
+        raw = re.sub(
+            rf'data-score="{score}"([^>]*?)fill:#[0-9A-Fa-f]{{6}}',
+            f'data-score="{score}"\\1fill:{levels[score]}',
+            raw,
+        )
+        raw = re.sub(
+            rf'fill:#[0-9A-Fa-f]{{6}}([^>]*?)data-score="{score}"',
+            f'fill:{levels[score]}\\1data-score="{score}"',
+            raw,
+        )
+    raw = raw.replace("fill:#767676", f"fill:#{MUTED.lower()}")
     inner = "<svg" + raw.split("<svg", 1)[1]
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" width="100%" '
         'viewBox="0 0 743 156" preserveAspectRatio="xMidYMid meet">\n'
-        '  <rect width="743" height="156" rx="12" fill="#1c1d20"/>\n'
+        f'  <rect width="743" height="156" rx="12" fill="#{BG.lower()}"/>\n'
         '  <g transform="translate(40,24)">\n'
         f"    {inner}\n"
         "  </g>\n"
@@ -134,8 +170,8 @@ def main() -> None:
 
     s = parse_stats(stats_raw)
     k = parse_streak(streak_raw)
-    stats = freeze(stats_raw)
-    streak = freeze(streak_raw)
+    stats = freeze(stats_raw).replace("#C8C9CC", f"#{MUTED}").replace("#c8c9cc", f"#{MUTED.lower()}")
+    streak = freeze(streak_raw).replace("#C8C9CC", f"#{MUTED}").replace("#c8c9cc", f"#{MUTED.lower()}")
 
     (ROOT / "github-stats.svg").write_text(stats)
     (ROOT / "streak.svg").write_text(streak)
