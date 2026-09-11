@@ -1,10 +1,14 @@
 <!--
-  cinematic profile
-  #1C1D20 charcoal · #999D9E hero · #455CE9 accent · #999A9E muted
+  GitHub profile README for sambhavthakkar/sambhavthakkar
+  Palette: #1C1D20 charcoal · #999D9E hero · #455CE9 accent · #999A9E muted
 -->
 
 <p>
   <img src="header.png" alt="Sambhav Thakkar — Freelance Designer & Developer. Located in Delhi, India." width="100%" />
+</p>
+
+<p>
+  <img src="hellos.png" alt="Hello · Bonjour · स्वागत हे · Ciao · Olá · おい · Hallå · Guten tag · Hallo" width="100%" />
 </p>
 
 © Code by Sambhav
@@ -39,7 +43,30 @@ export const sambhav = {
 
 ---
 
+<sub>SIGNAL</sub>
+
+<p>
+  <img src="stats.png" alt="1,640 contributions · 44 public commits in 2026 · 35-day longest streak · A+ rank" width="100%" />
+</p>
+
+<p>
+  <img src="github-stats.svg" alt="GitHub stats" height="170" />
+  <img src="streak.svg" alt="GitHub streak" height="170" />
+</p>
+
+<p>
+  <img src="contrib.svg" alt="Contribution log" width="100%" />
+</p>
+
+Most of that lives in private repos and client work. The public graph is not the map.
+
+---
+
 <sub>PRACTICE FILTERS</sub>
+
+<p>
+  <img src="lenses.png" alt="All · Rust · Design · Go · Mobile" width="100%" />
+</p>
 
 The dock is a filter. One profile. Four lenses.
 
@@ -91,8 +118,6 @@ The dock is a filter. One profile. Four lenses.
   </tr>
 </table>
 
-Most of that lives in private repos and client work. The public graph is not the map.
-
 ---
 
 <sub>RECENT WORK</sub>
@@ -109,29 +134,29 @@ Most of that lives in private repos and client work. The public graph is not the
   </tr>
   <tr>
     <td>
-      <h3><a href="https://github.com/sambhavthakkar">TaskFlow</a></h3>
+      <h3><a href="https://github.com/sambhavthakkar/SuperShop">SuperShop</a></h3>
     </td>
     <td align="right">
-      Product &amp; Engineering<br />
-      <sub>2025</sub>
+      Flutter · product<br />
+      <sub>public</sub>
     </td>
   </tr>
   <tr>
     <td>
-      <h3><a href="https://github.com/sambhavthakkar">WeatherLens</a></h3>
+      <h3><a href="https://github.com/sambhavthakkar/QuantaraX">QuantaraX</a></h3>
     </td>
     <td align="right">
-      Design &amp; Development<br />
-      <sub>2024</sub>
+      Go · systems<br />
+      <sub>public</sub>
     </td>
   </tr>
   <tr>
     <td>
-      <h3><a href="https://github.com/sambhavthakkar">Algo-Visualizer</a></h3>
+      <h3><a href="https://github.com/sambhavthakkar/PulseDrive">PulseDrive</a></h3>
     </td>
     <td align="right">
-      Interaction &amp; Development<br />
-      <sub>2024</sub>
+      Python · tooling<br />
+      <sub>public</sub>
     </td>
   </tr>
 </table>
@@ -177,17 +202,6 @@ Interface and system, same hand. The slice that survives a real user is the one 
 <img src="https://skillicons.dev/icons?i=linux,docker,git,github,cloudflare" alt="Linux, Docker, Git, GitHub, Cloudflare" />
 
 <sub>KMP · Compose Multiplatform · Flutter · React / Next.js · Go · UI/UX · Rust exploring</sub>
-
----
-
-<sub>SIGNAL</sub>
-
-<p>
-  <img height="165" src="https://github-readme-stats.vercel.app/api?username=sambhavthakkar&show_icons=true&hide_border=true&bg_color=1C1D20&title_color=FFFFFF&icon_color=455CE9&text_color=C8C9CC&ring_color=455CE9&hide=stars" alt="GitHub stats" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=sambhavthakkar&layout=compact&hide_border=true&bg_color=1C1D20&title_color=FFFFFF&text_color=C8C9CC" alt="Top languages" />
-</p>
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=sambhavthakkar&custom_title=contribution%20log&bg_color=1C1D20&color=999A9E&line=455CE9&point=FFFFFF&area=true&area_color=455CE9&hide_border=true" alt="Contribution log" width="100%" />
 
 ---
 
