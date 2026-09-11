@@ -28,7 +28,7 @@ Design, code, and interaction sit in the same hand. The dock is a filter on this
 ```ts
 // studio.ts
 export const sambhav = {
-  role: "Design Engineer",
+  role: "Software Engineer",
   practice: "interface + system, same hand",
   lenses: ["rust", "design", "go", "mobile"],
   stack: ["kmp", "flutter", "react", "next", "go"],
@@ -117,7 +117,7 @@ ops & systems · Linux · Docker · Git · GitHub · Cloudflare
 
 <p>
   <a href="mailto:thakkarsambhav@gmail.com">
-    <img src="footer.png" alt="Let's work together. Get in touch. Design Engineer · Delhi." width="100%" />
+    <img src="footer.png" alt="Let's work together. Get in touch. Software Engineer · Delhi." width="100%" />
   </a>
 </p>
 
