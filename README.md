@@ -4,7 +4,7 @@
 -->
 
 <p>
-  <img src="header.gif" alt="Sambhav Thakkar — Freelance Designer & Developer. Located in Delhi, India." width="100%" />
+  <img src="header.svg" alt="Sambhav Thakkar — Freelance Designer & Developer. Located in Delhi, India." width="100%" />
 </p>
 
 © Code by Sambhav
