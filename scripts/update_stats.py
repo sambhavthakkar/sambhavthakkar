@@ -1,14 +1,33 @@
 #!/usr/bin/env python3
-"""Refresh GitHub profile stat SVGs. Safe to run locally or in Actions."""
+"""Refresh GitHub profile stat SVGs. Safe to run locally or in Actions.
+
+Pipeline:
+  1. Poller — .stats-cache.json remembers the newest public activity event we
+     have already rendered; if nothing newer exists, exit before any fetch.
+  2. Fetch upstream cards with retries. On failure keep the previous SVG and
+     exit 0, so a flaky card service never blanks the profile or reddens CI.
+  3. Only when card content actually changed: bump the ?v= embed versions in
+     README.md (busts GitHub Camo) and rewrite the <!--STATS_UPDATED--> stamp.
+  4. Save the cache. An event is marked as rendered only once it made it into
+     the cards — unchanged runs stay unmarked so the next trigger retries.
+"""
 
 from __future__ import annotations
 
+import json
+import os
 import re
+import time
 import urllib.request
+from collections.abc import Callable
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 USER = "sambhavthakkar"
+README_PATH = ROOT / "README.md"
+CACHE_PATH = ROOT / ".stats-cache.json"
+
 # ink / paper — no hue
 BG = "1C1D20"
 ACCENT = "F2F2F2"
@@ -30,11 +49,86 @@ STREAK_URL = (
 )
 CHART_URL = f"https://ghchart.rshah.org/{ACCENT.lower()}/{USER}"
 
+EMBEDDED = ("stats-strip.svg", "github-stats.svg", "streak.svg", "contrib.svg")
+LAST_EVENT_KEY = "last_event_at"
+LAST_REFRESH_KEY = "last_refresh"
+EMBED_VERSION_KEY = "embed_version"
+
 
 def fetch(url: str) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": "sambhav-profile-stats"})
     with urllib.request.urlopen(req, timeout=30) as res:
         return res.read().decode("utf-8", errors="replace")
+
+
+def fetch_with_retry(url: str, attempts: int = 3) -> str | None:
+    """Retry flaky upstreams. None beats a red run: caller keeps the old file."""
+    for attempt in range(attempts):
+        try:
+            return fetch(url)
+        except Exception as exc:  # upstream cards flake; tolerate everything
+            print(f"  fetch failed ({exc}); attempt {attempt + 1}/{attempts}: {url}")
+            if attempt < attempts - 1:
+                time.sleep(5 * (attempt + 1))
+    return None
+
+
+def http_json(url: str) -> object | None:
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "sambhav-profile-stats",
+            "Accept": "application/vnd.github+json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as res:
+            return json.loads(res.read().decode("utf-8", errors="replace"))
+    except Exception as exc:
+        print(f"  GitHub API unavailable ({exc}): {url}")
+        return None
+
+
+def last_public_activity() -> str | None:
+    """ISO timestamp of the newest public event; falls back to pushed_at."""
+    events = http_json(f"https://api.github.com/users/{USER}/events/public?per_page=1")
+    if isinstance(events, list) and events and events[0].get("created_at"):
+        return str(events[0]["created_at"])
+    profile = http_json(f"https://api.github.com/users/{USER}")
+    if isinstance(profile, dict) and profile.get("pushed_at"):
+        return str(profile["pushed_at"])
+    return None
+
+
+def _ts(value: str) -> datetime | None:
+    try:
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def seen_before(event_at: str, cache: dict[str, object]) -> bool:
+    event_dt = _ts(event_at)
+    seen_dt = _ts(str(cache.get(LAST_EVENT_KEY, "")))
+    return event_dt is not None and seen_dt is not None and event_dt <= seen_dt
+
+
+def load_cache() -> dict[str, object]:
+    try:
+        return json.loads(CACHE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def save_cache(previous: dict[str, object], *, seen_event: str | None, version: int) -> None:
+    """seen_event=None keeps the previous marker so the next run retries."""
+    payload = {
+        LAST_EVENT_KEY: seen_event or str(previous.get(LAST_EVENT_KEY, "")),
+        LAST_REFRESH_KEY: datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        EMBED_VERSION_KEY: version,
+    }
+    CACHE_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
 def _freeze_style(style: str) -> str:
@@ -52,6 +146,18 @@ def freeze(svg: str) -> str:
     )
     svg = re.sub(r"(\.stagger\s*\{[^}]*?)opacity:\s*0", r"\1opacity: 1", svg)
     svg = re.sub(r"(0%\s*\{\s*opacity:\s*)0", r"\g<1>1", svg)
+    return svg
+
+
+def theme(svg: str) -> str:
+    svg = freeze(svg)
+    for old, new in (
+        ("#C8C9CC", f"#{MUTED}"),
+        ("#c8c9cc", f"#{MUTED.lower()}"),
+        ("#455CE9", f"#{ACCENT}"),
+        ("#455ce9", f"#{ACCENT.lower()}"),
+    ):
+        svg = svg.replace(old, new)
     return svg
 
 
@@ -84,6 +190,40 @@ def parse_streak(svg: str) -> dict[str, str]:
         data["current"] = nums[1]
         data["longest"] = nums[2]
     return data
+
+
+def parse_or_prev(
+    raw: str | None, path: Path, parser: Callable[[str], dict[str, str]]
+) -> dict[str, str]:
+    """Parse fresh content, or the frozen file when the upstream call failed."""
+    if raw:
+        return parser(raw)
+    if path.exists():
+        return parser(path.read_text(encoding="utf-8", errors="replace"))
+    return {}
+
+
+def write_if_differs(path: Path, content: str) -> bool:
+    try:
+        if path.read_text(encoding="utf-8") == content:
+            return False
+    except OSError:
+        pass
+    path.write_text(content, encoding="utf-8")
+    return True
+
+
+def stamp_readme(version: int) -> None:
+    """Bump ?v= on embedded stat SVGs (busts GitHub Camo) and rewrite the
+    freshness marker. Indentation and surrounding tags are preserved."""
+    if not README_PATH.exists():
+        return
+    text = README_PATH.read_text(encoding="utf-8")
+    for name in EMBEDDED:
+        text = re.sub(rf"{re.escape(name)}(\?v=\d+)?", f"{name}?v={version}", text)
+    stamp = f"Updated {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC <!--STATS_UPDATED-->"
+    text = re.sub(r"[^\n<]*<!--STATS_UPDATED-->", stamp, text)
+    README_PATH.write_text(text, encoding="utf-8")
 
 
 def strip_svg(commits: str, contributions: str, longest: str, rank: str) -> str:
@@ -163,40 +303,85 @@ def wrap_chart(raw: str) -> str:
     )
 
 
+def write_summary(
+    prev_s: dict[str, str], prev_k: dict[str, str], s: dict[str, str], k: dict[str, str]
+) -> None:
+    rows = [
+        ("Commits 2026", prev_s.get("commits", "—"), s.get("commits", "—")),
+        ("Contributions", prev_k.get("contributions", "—"), k.get("contributions", "—")),
+        ("Longest streak", prev_k.get("longest", "—"), k.get("longest", "—")),
+        ("Current streak", prev_k.get("current", "—"), k.get("current", "—")),
+        ("GitHub rank", prev_s.get("rank", "—"), s.get("rank", "—")),
+    ]
+    for metric, before, after in rows:
+        print(f"  {metric}: {before} -> {after}")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        table = ["| metric | before | after |", "| --- | --- | --- |"]
+        table += [f"| {m} | {b} | {a} |" for m, b, a in rows]
+        with open(summary, "a", encoding="utf-8") as fh:
+            fh.write("### Stats refresh\n\n" + "\n".join(table) + "\n")
+
+
 def main() -> None:
-    stats_raw = fetch(STATS_URL)
-    streak_raw = fetch(STREAK_URL)
-    chart = fetch(CHART_URL)
+    cache = load_cache()
+    version = int(cache.get(EMBED_VERSION_KEY, 0)) or 1
+    event_at = last_public_activity()
 
-    s = parse_stats(stats_raw)
-    k = parse_streak(streak_raw)
-    def theme(svg: str) -> str:
-        svg = freeze(svg)
-        for old, new in (
-            ("#C8C9CC", f"#{MUTED}"),
-            ("#c8c9cc", f"#{MUTED.lower()}"),
-            ("#455CE9", f"#{ACCENT}"),
-            ("#455ce9", f"#{ACCENT.lower()}"),
-        ):
-            svg = svg.replace(old, new)
-        return svg
+    if event_at and seen_before(event_at, cache):
+        print(
+            f"No public activity newer than {cache.get(LAST_EVENT_KEY)} "
+            f"(latest event: {event_at}); nothing to do."
+        )
+        return
+    if event_at:
+        print(f"New public activity since {cache.get(LAST_EVENT_KEY) or 'first run'}: {event_at}")
+    else:
+        print("GitHub API unreachable; refreshing anyway.")
 
-    stats = theme(stats_raw)
-    streak = theme(streak_raw)
+    prev_s = parse_or_prev(None, ROOT / "github-stats.svg", parse_stats)
+    prev_k = parse_or_prev(None, ROOT / "streak.svg", parse_streak)
 
-    (ROOT / "github-stats.svg").write_text(stats)
-    (ROOT / "streak.svg").write_text(streak)
-    (ROOT / "contrib.svg").write_text(wrap_chart(chart))
-    (ROOT / "stats-strip.svg").write_text(
-        strip_svg(s["commits"], k["contributions"], k["longest"], s["rank"])
+    stats_raw = fetch_with_retry(STATS_URL)
+    streak_raw = fetch_with_retry(STREAK_URL)
+    chart_raw = fetch_with_retry(CHART_URL)
+
+    if stats_raw is None and streak_raw is None and chart_raw is None:
+        save_cache(cache, seen_event=None, version=version)
+        print("WARNING: all upstream card services failed; keeping previous SVGs.")
+        return
+
+    s = parse_or_prev(stats_raw, ROOT / "github-stats.svg", parse_stats)
+    k = parse_or_prev(streak_raw, ROOT / "streak.svg", parse_streak)
+
+    changed = False
+    if stats_raw:
+        changed |= write_if_differs(ROOT / "github-stats.svg", theme(stats_raw))
+    if streak_raw:
+        changed |= write_if_differs(ROOT / "streak.svg", theme(streak_raw))
+    if chart_raw:
+        changed |= write_if_differs(ROOT / "contrib.svg", wrap_chart(chart_raw))
+    changed |= write_if_differs(
+        ROOT / "stats-strip.svg",
+        strip_svg(
+            s.get("commits", "—"),
+            k.get("contributions", "—"),
+            k.get("longest", "—"),
+            s.get("rank", "—"),
+        ),
     )
-    print(
-        "updated",
-        f"commits={s['commits']}",
-        f"contrib={k['contributions']}",
-        f"streak={k['longest']}",
-        f"rank={s['rank']}",
-    )
+
+    if changed:
+        version += 1
+        stamp_readme(version)
+
+    write_summary(prev_s, prev_k, s, k)
+    save_cache(cache, seen_event=event_at if changed else None, version=version)
+
+    if changed:
+        print(f"Cards refreshed; README embeds bumped to ?v={version}.")
+    else:
+        print("Cards unchanged (upstream cache); event left unmarked so the next run retries.")
 
 
 if __name__ == "__main__":
