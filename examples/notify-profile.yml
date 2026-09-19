@@ -1,0 +1,33 @@
+name: Notify profile stats
+
+on:
+  push:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened, closed]
+  pull_request_review:
+    types: [submitted]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  notify:
+    if: >-
+      github.actor == 'sambhavthakkar' &&
+      (github.event_name != 'pull_request' ||
+       github.event.action != 'closed' ||
+       github.event.pull_request.merged)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request profile refresh
+        env:
+          PROFILE_DISPATCH_TOKEN: ${{ secrets.PROFILE_DISPATCH_TOKEN }}
+        run: |
+          curl --silent --show-error --fail-with-body --retry 3 --retry-all-errors \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${PROFILE_DISPATCH_TOKEN}" \
+            --url "https://api.github.com/repos/sambhavthakkar/sambhavthakkar/dispatches" \
+            --data '{"event_type":"activity-ping"}'

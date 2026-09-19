@@ -2,16 +2,11 @@ name: Update stats
 
 on:
   schedule:
-    # Safety net only — the poller in update_stats.py early-exits no-op runs.
-    # Offset minute avoids :00 congestion and GitHub's 10-60m schedule delays.
-    - cron: "17 */6 * * *"
+    # Retry when a dispatch arrives before upstream cards have updated.
+    - cron: "17,47 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - README.md
-      - scripts/**
-      - .github/workflows/**
   repository_dispatch:
     types: [activity-ping]
 
@@ -47,11 +42,5 @@ jobs:
           fi
           # [skip ci]: pushes by GITHUB_TOKEN don't trigger workflows anyway;
           # this keeps forks/manual remotes quiet too.
-          git commit -m "$(cat <<'EOF'
-          chore: refresh stats [skip ci]
-
-          Generated with Codebuff 🤖
-          Co-Authored-By: Codebuff <noreply@codebuff.com>
-          EOF
-          )"
+          git commit -m "chore: refresh stats [skip ci]"
           git push

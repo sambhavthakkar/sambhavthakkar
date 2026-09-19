@@ -2,14 +2,11 @@
 """Refresh GitHub profile stat SVGs. Safe to run locally or in Actions.
 
 Pipeline:
-  1. Poller — .stats-cache.json remembers the newest public activity event we
-     have already rendered; if nothing newer exists, exit before any fetch.
-  2. Fetch upstream cards with retries. On failure keep the previous SVG and
+  1. Fetch upstream cards with retries. On failure keep the previous SVG and
      exit 0, so a flaky card service never blanks the profile or reddens CI.
-  3. Only when card content actually changed: bump the ?v= embed versions in
+  2. Only when card content actually changed: bump the ?v= embed versions in
      README.md (busts GitHub Camo) and rewrite the <!--STATS_UPDATED--> stamp.
-  4. Save the cache. An event is marked as rendered only once it made it into
-     the cards — unchanged runs stay unmarked so the next trigger retries.
+  3. Save the cache only on an actual change, so fallback runs make no commits.
 """
 
 from __future__ import annotations
@@ -50,7 +47,6 @@ STREAK_URL = (
 CHART_URL = f"https://ghchart.rshah.org/{ACCENT.lower()}/{USER}"
 
 EMBEDDED = ("stats-strip.svg", "github-stats.svg", "streak.svg", "contrib.svg")
-LAST_EVENT_KEY = "last_event_at"
 LAST_REFRESH_KEY = "last_refresh"
 EMBED_VERSION_KEY = "embed_version"
 
@@ -73,47 +69,6 @@ def fetch_with_retry(url: str, attempts: int = 3) -> str | None:
     return None
 
 
-def http_json(url: str) -> object | None:
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": "sambhav-profile-stats",
-            "Accept": "application/vnd.github+json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=30) as res:
-            return json.loads(res.read().decode("utf-8", errors="replace"))
-    except Exception as exc:
-        print(f"  GitHub API unavailable ({exc}): {url}")
-        return None
-
-
-def last_public_activity() -> str | None:
-    """ISO timestamp of the newest public event; falls back to pushed_at."""
-    events = http_json(f"https://api.github.com/users/{USER}/events/public?per_page=1")
-    if isinstance(events, list) and events and events[0].get("created_at"):
-        return str(events[0]["created_at"])
-    profile = http_json(f"https://api.github.com/users/{USER}")
-    if isinstance(profile, dict) and profile.get("pushed_at"):
-        return str(profile["pushed_at"])
-    return None
-
-
-def _ts(value: str) -> datetime | None:
-    try:
-        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
-
-
-def seen_before(event_at: str, cache: dict[str, object]) -> bool:
-    event_dt = _ts(event_at)
-    seen_dt = _ts(str(cache.get(LAST_EVENT_KEY, "")))
-    return event_dt is not None and seen_dt is not None and event_dt <= seen_dt
-
-
 def load_cache() -> dict[str, object]:
     try:
         return json.loads(CACHE_PATH.read_text(encoding="utf-8"))
@@ -121,10 +76,8 @@ def load_cache() -> dict[str, object]:
         return {}
 
 
-def save_cache(previous: dict[str, object], *, seen_event: str | None, version: int) -> None:
-    """seen_event=None keeps the previous marker so the next run retries."""
+def save_cache(version: int) -> None:
     payload = {
-        LAST_EVENT_KEY: seen_event or str(previous.get(LAST_EVENT_KEY, "")),
         LAST_REFRESH_KEY: datetime.now(timezone.utc).isoformat(timespec="seconds"),
         EMBED_VERSION_KEY: version,
     }
@@ -326,18 +279,6 @@ def write_summary(
 def main() -> None:
     cache = load_cache()
     version = int(cache.get(EMBED_VERSION_KEY, 0)) or 1
-    event_at = last_public_activity()
-
-    if event_at and seen_before(event_at, cache):
-        print(
-            f"No public activity newer than {cache.get(LAST_EVENT_KEY)} "
-            f"(latest event: {event_at}); nothing to do."
-        )
-        return
-    if event_at:
-        print(f"New public activity since {cache.get(LAST_EVENT_KEY) or 'first run'}: {event_at}")
-    else:
-        print("GitHub API unreachable; refreshing anyway.")
 
     prev_s = parse_or_prev(None, ROOT / "github-stats.svg", parse_stats)
     prev_k = parse_or_prev(None, ROOT / "streak.svg", parse_streak)
@@ -347,7 +288,6 @@ def main() -> None:
     chart_raw = fetch_with_retry(CHART_URL)
 
     if stats_raw is None and streak_raw is None and chart_raw is None:
-        save_cache(cache, seen_event=None, version=version)
         print("WARNING: all upstream card services failed; keeping previous SVGs.")
         return
 
@@ -374,14 +314,14 @@ def main() -> None:
     if changed:
         version += 1
         stamp_readme(version)
+        save_cache(version)
 
     write_summary(prev_s, prev_k, s, k)
-    save_cache(cache, seen_event=event_at if changed else None, version=version)
 
     if changed:
         print(f"Cards refreshed; README embeds bumped to ?v={version}.")
     else:
-        print("Cards unchanged (upstream cache); event left unmarked so the next run retries.")
+        print("Cards unchanged; no commit needed.")
 
 
 if __name__ == "__main__":
