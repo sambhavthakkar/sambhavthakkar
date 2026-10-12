@@ -17,7 +17,9 @@
 &nbsp;·&nbsp;
 [X](https://x.com/sambhavthakkar)
 &nbsp;·&nbsp;
-[Email](mailto:thakkarsambhav@gmail.com)
+[Email](mailto:me@sambhavthakkar.com)
+&nbsp;·&nbsp;
+[Website](https://sambhavthakkar.com)
 
 ---
 
@@ -118,12 +120,14 @@ ops & systems · Linux · Docker · Git · GitHub · Cloudflare
 ---
 
 <p>
-  <a href="mailto:thakkarsambhav@gmail.com">
+  <a href="mailto:me@sambhavthakkar.com">
     <img src="footer.png" alt="Let's work together. Get in touch. Software Engineer · Delhi." width="100%" />
   </a>
 </p>
 
-[thakkarsambhav@gmail.com](mailto:thakkarsambhav@gmail.com)
+[me@sambhavthakkar.com](mailto:me@sambhavthakkar.com)
+&nbsp;·&nbsp;
+[sambhavthakkar.com](https://sambhavthakkar.com)
 &nbsp;·&nbsp;
 [github.com/sambhavthakkar](https://github.com/sambhavthakkar)
 &nbsp;·&nbsp;
