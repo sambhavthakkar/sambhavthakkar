@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Sambhav Thakkar's GitHub Stats, Rank: A+</title>
-        <desc id="descId">Total Commits (2026): 95, Total PRs: 39, Total Issues: 7, Contributed to (last year): 6</desc>
+        <desc id="descId">Total Commits (2026): 95, Total PRs: 42, Total Issues: 7, Contributed to (last year): 6</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -67,7 +67,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 127.09580725917982;
+        stroke-dashoffset: 127.08929716861448;
       }
     }
   
@@ -175,7 +175,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs"
-      >39</text>
+      >42</text>
     </g>
   </g><g transform="translate(0, 50)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
