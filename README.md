@@ -44,15 +44,15 @@ export const sambhav = {
 <sub>SIGNAL</sub>
 
 <div align="center">
-  <img src="stats-strip.svg?v=94" alt="Contributions, commits, streak, rank" width="100%" />
+  <img src="stats-strip.svg?v=95" alt="Contributions, commits, streak, rank" width="100%" />
   <br />
-  <img src="github-stats.svg?v=94" height="158" alt="GitHub stats" />
-  <img src="streak.svg?v=94" height="158" alt="GitHub streak" />
+  <img src="github-stats.svg?v=95" height="158" alt="GitHub stats" />
+  <img src="streak.svg?v=95" height="158" alt="GitHub streak" />
   <br />
-  <img src="contrib.svg?v=94" alt="Contribution log" width="100%" />
+  <img src="contrib.svg?v=95" alt="Contribution log" width="100%" />
 </div>
 
-Updated 2026-10-30 00:25 UTC <!--STATS_UPDATED-->
+Updated 2026-10-31 02:24 UTC <!--STATS_UPDATED-->
 
 Most of that lives in private repos and client work. The public graph is not the map.
 
